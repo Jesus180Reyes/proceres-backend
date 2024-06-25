@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .ts",
     "build": "npm run tsc",
     "tsc": "tsc",
+    "start": "node dist/index.js",
     "format-code": "npx prettier --write src/"
   },
   "keywords": [],
