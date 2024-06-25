@@ -15,6 +15,9 @@ export const CategoriaModel = () => {
       nombre: {
         type: DataTypes.ENUM('cocina', 'sala'),
       },
+      color: {
+        type: DataTypes.STRING,
+      },
     },
     {
       tableName: 'categorias',
@@ -27,4 +30,5 @@ export const CategoriaModel = () => {
 interface ICategoria {
   id: number;
   nombre: 'cocina' | 'sala';
+  color: string;
 }

@@ -9,6 +9,7 @@ import compression from 'compression';
 import { config } from 'dotenv';
 import { ConnectionDB } from '../db/connection';
 import inventario from '../routes/inventario/inventario.routes';
+import categoria from '../routes/categorias/categorias.routes';
 // import presupuesto from '../routes/presupuesto.route';
 // import { ConnectionDB } from '../db/dbConecction';
 // import { CronJob } from 'cron';
@@ -18,6 +19,7 @@ export class Server {
   //   private reportFrecuency = new ReportFrecuency();
   public paths = {
     inventario: '/api/inventario',
+    categoria: '/api/categoria',
   };
   public app: Application;
   public port: string;
@@ -80,6 +82,7 @@ export class Server {
 
   routes() {
     this.app.use(this.paths.inventario, inventario);
+    this.app.use(this.paths.categoria, categoria);
   }
 
   private mountCronOperations(): void {

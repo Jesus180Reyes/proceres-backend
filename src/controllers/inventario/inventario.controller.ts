@@ -1,6 +1,8 @@
 import { InventarioModel } from '../../models/inventario_model';
 import { Request, Response } from 'express';
 import { MovimientoModel } from '../../models/movimiento_model';
+import { CategoriaModel } from '../../models/categoria_model';
+import { UsuarioModel } from '../../models/usuario_model';
 export class Controller {
   createInventario = async (req: Request, res: Response) => {
     const { body } = req;
@@ -26,7 +28,20 @@ export class Controller {
     }
   };
   getInventario = async (req: Request, res: Response) => {
-    const inventario = await InventarioModel().findAll();
+    const inventario = await InventarioModel(['categoria', 'user']).findAll({
+      include: [
+        {
+          model: CategoriaModel(),
+          as: 'categoria',
+          attributes: ['nombre', 'color'],
+        },
+        {
+          model: UsuarioModel(),
+          as: 'usuario',
+          attributes: ['nombre', 'email'],
+        },
+      ],
+    });
     res.json({
       ok: true,
       inventario,
