@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
+    "build": "npm run tsc",
+    "tsc": "tsc",
     "format-code": "npx prettier --write src/"
   },
   "keywords": [],
