@@ -10,6 +10,7 @@ import { config } from 'dotenv';
 import { ConnectionDB } from '../db/connection';
 import inventario from '../routes/inventario/inventario.routes';
 import categoria from '../routes/categorias/categorias.routes';
+import auth from '../routes/auth/auth.routes';
 // import presupuesto from '../routes/presupuesto.route';
 // import { ConnectionDB } from '../db/dbConecction';
 // import { CronJob } from 'cron';
@@ -20,6 +21,7 @@ export class Server {
   public paths = {
     inventario: '/api/inventario',
     categoria: '/api/categoria',
+    auth: '/api/auth',
   };
   public app: Application;
   public port: string;
@@ -83,6 +85,7 @@ export class Server {
   routes() {
     this.app.use(this.paths.inventario, inventario);
     this.app.use(this.paths.categoria, categoria);
+    this.app.use(this.paths.auth, auth);
   }
 
   private mountCronOperations(): void {

@@ -32,9 +32,9 @@ export const UsuarioModel = () => {
   return model;
 };
 
-interface IUsuario {
-  id: number;
+export interface IUsuario {
+  id?: number;
   nombre: string;
   email: string;
-  password: string;
+  password?: string;
 }
