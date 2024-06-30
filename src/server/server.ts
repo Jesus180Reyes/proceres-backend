@@ -11,6 +11,7 @@ import { ConnectionDB } from '../db/connection';
 import inventario from '../routes/inventario/inventario.routes';
 import categoria from '../routes/categorias/categorias.routes';
 import auth from '../routes/auth/auth.routes';
+import insumo from '../routes/insumo/insumo.routes';
 // import presupuesto from '../routes/presupuesto.route';
 // import { ConnectionDB } from '../db/dbConecction';
 // import { CronJob } from 'cron';
@@ -22,6 +23,7 @@ export class Server {
     inventario: '/api/inventario',
     categoria: '/api/categoria',
     auth: '/api/auth',
+    insumo: '/api/insumo',
   };
   public app: Application;
   public port: string;
@@ -86,6 +88,7 @@ export class Server {
     this.app.use(this.paths.inventario, inventario);
     this.app.use(this.paths.categoria, categoria);
     this.app.use(this.paths.auth, auth);
+    this.app.use(this.paths.insumo, insumo);
   }
 
   private mountCronOperations(): void {
