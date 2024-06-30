@@ -1,7 +1,9 @@
 import { check } from 'express-validator';
 import { validateFields } from '../middlewares/validateFields';
-
+import { AuthMiddleware } from '../../middlewares/auth';
+const authMiddleware = new AuthMiddleware();
 export const inventarioValidation = [
+  authMiddleware.auth,
   check('nombre_producto')
     .notEmpty()
     .exists()
@@ -12,7 +14,5 @@ export const inventarioValidation = [
     .exists()
     .withMessage('Categoria es Requerido'),
   check('categoria_id').isInt().not().withMessage('Categoria debe ir como Int'),
-  check('user_id').notEmpty().exists().withMessage('Usuario es Requerido'),
-  check('user_id').isInt().not().withMessage('Usuario debe ir como Int'),
   validateFields,
 ];

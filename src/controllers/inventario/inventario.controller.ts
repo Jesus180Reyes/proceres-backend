@@ -4,10 +4,13 @@ import { MovimientoModel } from '../../models/movimiento_model';
 import { CategoriaModel } from '../../models/categoria_model';
 import { UsuarioModel } from '../../models/usuario_model';
 export class Controller {
-  createInventario = async (req: Request, res: Response) => {
+  createInventario = async (req: any, res: Response) => {
     const { body } = req;
     try {
-      const inventario = await InventarioModel().create(body);
+      const inventario = await InventarioModel().create({
+        ...body,
+        user_id: req.user.id
+      });
       await MovimientoModel().create({
         title: 'Nuevo Producto Ingresado',
         description: 'Se ha registrado un nuevo producto al inventario',
