@@ -9,7 +9,7 @@ export class Controller {
     try {
       const inventario = await InventarioModel().create({
         ...body,
-        user_id: req.user.id
+        user_id: req.user.id,
       });
       await MovimientoModel().create({
         title: 'Nuevo Producto Ingresado',
@@ -87,14 +87,14 @@ export class Controller {
         totalProductsOnAirbnb,
         totalProductsOnInmobiliaria,
         totalProductsOnPlateria,
-        totalProductsOnUtensillos
-      }
+        totalProductsOnUtensillos,
+      },
     });
-    async function  getTotalProductsByCategory (id: number)  {
+    async function getTotalProductsByCategory(id: number) {
       const productsOnCategory = await InventarioModel().sum('cantidad', {
         where: {
           categoria_id: id,
-        }
+        },
       });
       return productsOnCategory;
     }

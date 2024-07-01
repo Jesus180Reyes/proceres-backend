@@ -1,5 +1,3 @@
-
-
 import { DataTypes, Model } from 'sequelize';
 import { ConnectionDB } from '../db/connection';
 import { UsuarioModel } from './usuario_model';
@@ -34,12 +32,12 @@ export const InsumoModel = (include?: includes[]) => {
       tableName: 'insumos',
     }
   );
-  if(include && include.includes('user')) {
+  if (include && include.includes('user')) {
     model.hasOne(UsuarioModel(), {
-        foreignKey: 'id',
-        sourceKey: 'user_id',
-        as: 'user',
-      });
+      foreignKey: 'id',
+      sourceKey: 'user_id',
+      as: 'user',
+    });
   }
 
   return model;
