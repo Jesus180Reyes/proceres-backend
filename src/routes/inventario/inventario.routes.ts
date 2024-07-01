@@ -8,5 +8,6 @@ const controller = new Controller();
 router.post('/', inventarioValidation, controller.createInventario);
 router.get('/', controller.getInventario);
 router.get('/:id', controller.getProductoById);
+router.get('/total/Products', controller.getTotalProducts);
 
 export default router;

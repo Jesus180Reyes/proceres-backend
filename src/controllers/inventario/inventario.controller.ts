@@ -62,4 +62,41 @@ export class Controller {
       inventario,
     });
   };
+  getTotalProducts = async (req: Request, res: Response) => {
+    const totalProducts = await InventarioModel().count();
+    const totalQuantityProducts = await InventarioModel().sum('cantidad');
+    const totalCategories = await CategoriaModel().count();
+    const totalProductsOnCocina = await getTotalProductsByCategory(1);
+    const totalProductsOnCafe = await getTotalProductsByCategory(2);
+    const totalProductsOnRestaurante = await getTotalProductsByCategory(3);
+    const totalProductsOnLimpieza = await getTotalProductsByCategory(4);
+    const totalProductsOnAirbnb = await getTotalProductsByCategory(5);
+    const totalProductsOnInmobiliaria = await getTotalProductsByCategory(6);
+    const totalProductsOnPlateria = await getTotalProductsByCategory(7);
+    const totalProductsOnUtensillos = await getTotalProductsByCategory(8);
+    res.json({
+      ok: true,
+      totalProducts,
+      totalQuantityProducts,
+      category: {
+        totalCategories,
+        totalProductsOnCocina,
+        totalProductsOnCafe,
+        totalProductsOnRestaurante,
+        totalProductsOnLimpieza,
+        totalProductsOnAirbnb,
+        totalProductsOnInmobiliaria,
+        totalProductsOnPlateria,
+        totalProductsOnUtensillos
+      }
+    });
+    async function  getTotalProductsByCategory (id: number)  {
+      const productsOnCategory = await InventarioModel().sum('cantidad', {
+        where: {
+          categoria_id: id,
+        }
+      });
+      return productsOnCategory;
+    }
+  };
 }
