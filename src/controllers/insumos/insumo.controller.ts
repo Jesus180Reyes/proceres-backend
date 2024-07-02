@@ -42,4 +42,14 @@ export class Controller {
       });
     }
   };
+  totalInsumo = async (req:Request, res: Response) => {
+    const totalInsumos = await InsumoModel().count();
+    const quantityInsumos = await InsumoModel().sum('cantidad');
+
+    res.json({
+      ok: true,
+      totalInsumos,
+      quantityInsumos
+    })
+  }
 }
