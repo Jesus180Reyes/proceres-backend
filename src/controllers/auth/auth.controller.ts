@@ -72,8 +72,27 @@ export class Controller {
       });
     }
   };
-   validarToken = async(req:Request, res: Response) => {
-    
+   getUserById  = async(req:Request, res: Response) => {
+    const {id} = req.params;
+      const user = await UsuarioModel().findByPk(id , {
+        attributes: {
+          exclude: ['password']
+        }
+      });
+      if(!user) {
+        return res.json({
+          ok: false, 
+          msg: 'No Existe'
+        })
+      }
+      const tokenClass =  new Token();
+     const token =  await tokenClass.generate(user.dataValues);
+      res.json({
+        ok: true,
+        msg: 'Usuario Logueado Exitosamente!',
+        user,
+        token
+      })
   }
 
 }
