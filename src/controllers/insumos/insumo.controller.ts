@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { InsumoModel } from '../../models/insumo_model';
 import { UsuarioModel } from '../../models/usuario_model';
+import { MovimientoModel } from '../../models/movimiento_model';
 
 export class Controller {
   getInsumos = async (req: Request, res: Response) => {
@@ -30,6 +31,12 @@ export class Controller {
         observacion_general: body.observacion_general,
         user_id: req.user.id,
       });
+      await MovimientoModel().create({
+        title: 'Insumo Creado en Inventario',
+        description: 'Se ha creado un Insumo al Inventario',
+        tipo_movimiento: 'entrada',
+        user_id: req.user.id
+      })
       res.json({
         ok: true,
         insumo,
