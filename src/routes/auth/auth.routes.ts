@@ -6,7 +6,6 @@ import { authValidation } from '../../config/validation/authValidation';
 const router = Router();
 const controller = new Controller();
 const user = new UserMiddleware();
-
 router.post('/', authValidation, controller.login);
 
 router.post('/register', [user.isUserExists], controller.registerUser);

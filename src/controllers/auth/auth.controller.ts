@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UsuarioModel } from '../../models/usuario_model';
 import bycrypt from 'bcrypt';
 import { Token } from '../../utils/token/token';
+import jwt from 'jsonwebtoken'
 export class Controller {
   login = async (req: Request, res: Response) => {
     const { password, email } = req.body;
@@ -71,4 +72,8 @@ export class Controller {
       });
     }
   };
+   validarToken = async(req:Request, res: Response) => {
+    
+  }
+
 }

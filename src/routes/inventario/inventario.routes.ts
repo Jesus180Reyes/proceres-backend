@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { inventarioValidation } from '../../config/validation/inventario_validation';
 import { Controller } from '../../controllers/inventario/inventario.controller';
+import { AuthMiddleware } from '../../middlewares/auth';
 
 const router = Router();
 const controller = new Controller();
-
-router.post('/', inventarioValidation, controller.createInventario);
-router.get('/', controller.getInventario);
-router.get('/:id', controller.getProductoById);
-router.get('/total/Products', controller.getTotalProducts);
+const auth = new AuthMiddleware();
+router.post('/',[auth.auth],  inventarioValidation, controller.createInventario);
+router.get('/', [auth.auth],controller.getInventario);
+router.get('/:id',[auth.auth], controller.getProductoById);
+router.get('/total/Products',[auth.auth], controller.getTotalProducts);
 
 export default router;
