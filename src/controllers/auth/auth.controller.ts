@@ -72,6 +72,18 @@ export class Controller {
       });
     }
   };
+   getUsers =async (req: Request, res: Response) => {
+    const users = await UsuarioModel().findAll({
+      attributes: {
+        exclude: ['password','createdAt', 'updatedAt']
+      }
+    });
+    res.json({
+      ok: true,
+      users
+    })
+
+  }
    getUserById  = async(req:Request, res: Response) => {
     const {id} = req.params;
       const user = await UsuarioModel().findByPk(id , {

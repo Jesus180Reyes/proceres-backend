@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { MovimientoModel } from '../../models/movimiento_model';
 import { CategoriaModel } from '../../models/categoria_model';
 import { UsuarioModel } from '../../models/usuario_model';
+import { Op } from 'sequelize';
 export class Controller {
   createInventario = async (req: any, res: Response) => {
     const { body } = req;
@@ -31,7 +32,26 @@ export class Controller {
     }
   };
   getInventario = async (req: Request, res: Response) => {
+    const { categoria, user, startDate, endDate} = req.query;
+    const whereClause: any = {};
+    if (categoria) {
+    whereClause['categoria_id'] = Number(categoria);
+  }
+  if(user) {
+    whereClause['user_id'] = Number(user);
+
+  }
+  if (startDate && endDate) {
+    const start = new Date(startDate.toString());
+  const end = new Date(endDate.toString());
+    whereClause['createdAt'] = {
+      [Op.between]: [start, end.setDate(end.getDate() + 1)],
+    };
+  }
+
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
+      where: whereClause,
+      order: [['createdAt', 'DESC']], 
       include: [
         {
           model: CategoriaModel(),

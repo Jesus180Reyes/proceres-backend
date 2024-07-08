@@ -11,6 +11,7 @@ const auth = new AuthMiddleware();
 router.post('/', authValidation, controller.login);
 
 router.get('/user/:id',[auth.auth], controller.getUserById);
+router.get('/user/',[auth.auth], controller.getUsers);
 router.post('/register', [user.isUserExists], controller.registerUser);
 
 export default router;

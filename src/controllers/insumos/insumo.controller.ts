@@ -6,6 +6,7 @@ import { MovimientoModel } from '../../models/movimiento_model';
 export class Controller {
   getInsumos = async (req: Request, res: Response) => {
     const insumos = await InsumoModel(['user']).findAll({
+      order: [['createdAt', 'DESC']], 
       include: [
         {
           model: UsuarioModel(),
