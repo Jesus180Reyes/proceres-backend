@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { UsuarioModel } from '../../models/usuario_model';
 import bycrypt from 'bcrypt';
 import { Token } from '../../utils/token/token';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 export class Controller {
   login = async (req: Request, res: Response) => {
     const { password, email } = req.body;
@@ -72,39 +72,37 @@ export class Controller {
       });
     }
   };
-   getUsers =async (req: Request, res: Response) => {
+  getUsers = async (req: Request, res: Response) => {
     const users = await UsuarioModel().findAll({
       attributes: {
-        exclude: ['password','createdAt', 'updatedAt']
-      }
+        exclude: ['password', 'createdAt', 'updatedAt'],
+      },
     });
     res.json({
       ok: true,
-      users
-    })
-
-  }
-   getUserById  = async(req:Request, res: Response) => {
-    const {id} = req.params;
-      const user = await UsuarioModel().findByPk(id , {
-        attributes: {
-          exclude: ['password']
-        }
+      users,
+    });
+  };
+  getUserById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = await UsuarioModel().findByPk(id, {
+      attributes: {
+        exclude: ['password'],
+      },
+    });
+    if (!user) {
+      return res.json({
+        ok: false,
+        msg: 'No Existe',
       });
-      if(!user) {
-        return res.json({
-          ok: false, 
-          msg: 'No Existe'
-        })
-      }
-      const tokenClass =  new Token();
-     const token =  await tokenClass.generate(user.dataValues);
-      res.json({
-        ok: true,
-        msg: 'Usuario Logueado Exitosamente!',
-        user,
-        token
-      })
-  }
-
+    }
+    const tokenClass = new Token();
+    const token = await tokenClass.generate(user.dataValues);
+    res.json({
+      ok: true,
+      msg: 'Usuario Logueado Exitosamente!',
+      user,
+      token,
+    });
+  };
 }

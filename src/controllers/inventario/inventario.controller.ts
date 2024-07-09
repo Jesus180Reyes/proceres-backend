@@ -32,26 +32,25 @@ export class Controller {
     }
   };
   getInventario = async (req: Request, res: Response) => {
-    const { categoria, user, startDate, endDate} = req.query;
+    const { categoria, user, startDate, endDate } = req.query;
     const whereClause: any = {};
     if (categoria) {
-    whereClause['categoria_id'] = Number(categoria);
-  }
-  if(user) {
-    whereClause['user_id'] = Number(user);
-
-  }
-  if (startDate && endDate) {
-    const start = new Date(startDate.toString());
-  const end = new Date(endDate.toString());
-    whereClause['createdAt'] = {
-      [Op.between]: [start, end.setDate(end.getDate() + 1)],
-    };
-  }
+      whereClause['categoria_id'] = Number(categoria);
+    }
+    if (user) {
+      whereClause['user_id'] = Number(user);
+    }
+    if (startDate && endDate) {
+      const start = new Date(startDate.toString());
+      const end = new Date(endDate.toString());
+      whereClause['createdAt'] = {
+        [Op.between]: [start, end.setDate(end.getDate() + 1)],
+      };
+    }
 
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
       where: whereClause,
-      order: [['createdAt', 'DESC']], 
+      order: [['createdAt', 'DESC']],
       include: [
         {
           model: CategoriaModel(),

@@ -10,6 +10,6 @@ const auth = new AuthMiddleware();
 router.get('/', [auth.auth], controller.getInsumos);
 
 router.post('/', insumoValidation, controller.createInsumo);
-router.get('/total/insumo',[auth.auth], controller.totalInsumo);
+router.get('/total/insumo', [auth.auth], controller.totalInsumo);
 
 export default router;

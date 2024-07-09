@@ -6,13 +6,13 @@ import { Op } from 'sequelize';
 
 export class Controller {
   getInsumos = async (req: Request, res: Response) => {
-    const {user, startDate, endDate} = req.query;
-    const whereClause: any = {}; 
+    const { user, startDate, endDate } = req.query;
+    const whereClause: any = {};
 
-    if(user) {
+    if (user) {
       whereClause['user_id'] = user;
     }
-    if(startDate && endDate) {
+    if (startDate && endDate) {
       const start = new Date(startDate.toString());
       const end = new Date(endDate.toString());
       whereClause['createdAt'] = {
@@ -21,7 +21,7 @@ export class Controller {
     }
     const insumos = await InsumoModel(['user']).findAll({
       where: whereClause,
-      order: [['createdAt', 'DESC']], 
+      order: [['createdAt', 'DESC']],
       include: [
         {
           model: UsuarioModel(),
@@ -51,8 +51,8 @@ export class Controller {
         title: 'Insumo Creado en Inventario',
         description: 'Se ha creado un Insumo al Inventario',
         tipo_movimiento: 'entrada',
-        user_id: req.user.id
-      })
+        user_id: req.user.id,
+      });
       res.json({
         ok: true,
         insumo,
@@ -65,14 +65,14 @@ export class Controller {
       });
     }
   };
-  totalInsumo = async (req:Request, res: Response) => {
+  totalInsumo = async (req: Request, res: Response) => {
     const totalInsumos = await InsumoModel().count();
     const quantityInsumos = await InsumoModel().sum('cantidad');
 
     res.json({
       ok: true,
       totalInsumos,
-      quantityInsumos
-    })
-  }
+      quantityInsumos,
+    });
+  };
 }

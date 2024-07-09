@@ -6,9 +6,14 @@ import { AuthMiddleware } from '../../middlewares/auth';
 const router = Router();
 const controller = new Controller();
 const auth = new AuthMiddleware();
-router.post('/',[auth.auth],  inventarioValidation, controller.createInventario);
-router.get('/', [auth.auth],controller.getInventario);
-router.get('/:id',[auth.auth], controller.getProductoById);
-router.get('/total/Products',[auth.auth], controller.getTotalProducts);
+router.post(
+  '/',
+  [auth.auth],
+  inventarioValidation,
+  controller.createInventario
+);
+router.get('/', [auth.auth], controller.getInventario);
+router.get('/:id', [auth.auth], controller.getProductoById);
+router.get('/total/Products', [auth.auth], controller.getTotalProducts);
 
 export default router;
