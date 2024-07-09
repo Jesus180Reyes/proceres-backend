@@ -2,10 +2,25 @@ import { Request, Response } from 'express';
 import { InsumoModel } from '../../models/insumo_model';
 import { UsuarioModel } from '../../models/usuario_model';
 import { MovimientoModel } from '../../models/movimiento_model';
+import { Op } from 'sequelize';
 
 export class Controller {
   getInsumos = async (req: Request, res: Response) => {
+    const {user, startDate, endDate} = req.query;
+    const whereClause: any = {}; 
+
+    if(user) {
+      whereClause['user_id'] = user;
+    }
+    if(startDate && endDate) {
+      const start = new Date(startDate.toString());
+      const end = new Date(endDate.toString());
+      whereClause['createdAt'] = {
+        [Op.between]: [start, end.setDate(end.getDate() + 1)],
+      };
+    }
     const insumos = await InsumoModel(['user']).findAll({
+      where: whereClause,
       order: [['createdAt', 'DESC']], 
       include: [
         {
