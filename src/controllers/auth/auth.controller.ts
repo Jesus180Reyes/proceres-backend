@@ -3,6 +3,7 @@ import { UsuarioModel } from '../../models/usuario_model';
 import bycrypt from 'bcrypt';
 import { Token } from '../../utils/token/token';
 import jwt from 'jsonwebtoken';
+import { SendMail } from '../../utils/mail/sendMail';
 export class Controller {
   login = async (req: Request, res: Response) => {
     const { password, email } = req.body;
@@ -31,7 +32,17 @@ export class Controller {
       user.dataValues.password = undefined;
       const tokenClass = new Token();
       const token = await tokenClass.generate(user.dataValues);
-
+      const options = {
+        to: user?.dataValues.email,
+        email: user?.dataValues.email,
+        name: user?.dataValues.nombre,
+        // filename: 'Reporte.pdf',
+      };
+      const sendMail = new SendMail('login');
+      await sendMail.send(
+        options,
+        'Nuevo Inicio de Sesion con tus Credenciales'
+      );
       res.json({
         ok: true,
         msg: 'Usuario Logueado exitosamente!!',

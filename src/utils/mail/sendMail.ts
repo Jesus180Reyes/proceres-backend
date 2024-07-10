@@ -22,8 +22,8 @@ export class SendMail {
       },
     });
     this.emailTemplateProvider = fs.readFileSync(
-      path.join(__dirname, `../templates/handlebars/${this.template}.hbs`),
-      'utf8',
+      path.join(__dirname, `../../templates/handlebars/${this.template}.hbs`),
+      'utf8'
     );
   }
 
