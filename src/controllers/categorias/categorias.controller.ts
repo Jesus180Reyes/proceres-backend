@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 export class Controller {
   getCategorias = async (req: Request, res: Response) => {
     const categorias = await CategoriaModel().findAll({
+      order: [['nombre', 'ASC']],
       attributes: ['id', 'nombre', 'color'],
     });
 

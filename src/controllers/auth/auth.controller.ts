@@ -85,6 +85,7 @@ export class Controller {
   };
   getUsers = async (req: Request, res: Response) => {
     const users = await UsuarioModel().findAll({
+      order: [['nombre', 'ASC']],
       attributes: {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { inventarioValidation } from '../../config/validation/inventario_validation';
 import { Controller } from '../../controllers/categorias/categorias.controller';
 import { AuthMiddleware } from '../../middlewares/auth';
 

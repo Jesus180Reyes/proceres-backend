@@ -118,4 +118,13 @@ export class Controller {
       return productsOnCategory;
     }
   };
+
+  createPDF = (req: Request, res: Response) => {
+
+
+    res.json({
+      ok: true,
+      msg: 'PDF Creado Exitosamente'
+    })
+  }
 }

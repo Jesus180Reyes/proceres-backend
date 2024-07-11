@@ -15,5 +15,6 @@ router.post(
 router.get('/', [auth.auth], controller.getInventario);
 router.get('/:id', [auth.auth], controller.getProductoById);
 router.get('/total/Products', [auth.auth], controller.getTotalProducts);
+router.post('/pdf', [auth.auth], controller.createPDF);
 
 export default router;
