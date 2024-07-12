@@ -81,8 +81,8 @@ export class Controller {
     });
   };
   createPDF = async (req: any, res: Response) => {
-    const {id} = req.user;
-    const {startDate,endDate, user, categoria} = req.body;
+    const { id } = req.user;
+    const { startDate, endDate, user, categoria } = req.body;
     const whereClause: any = {};
 
     try {
@@ -93,9 +93,9 @@ export class Controller {
         whereClause['user_id'] = Number(user);
       }
       if (startDate && endDate) {
-        const start = moment(new Date(startDate).toISOString().slice(0, -1)).format(
-          'YYYY-MM-DD 00:00:00'
-        );
+        const start = moment(
+          new Date(startDate).toISOString().slice(0, -1)
+        ).format('YYYY-MM-DD 00:00:00');
         const end = moment(new Date(endDate).toISOString().slice(0, -1)).format(
           'YYYY-MM-DD 23:59:59'
         );
@@ -104,14 +104,14 @@ export class Controller {
         };
       }
       const currentUser = await UsuarioModel().findByPk(Number(id));
-      const insumos  = await InsumoModel([ 'user']).findAll({
+      const insumos = await InsumoModel(['user']).findAll({
         where: whereClause,
         include: [
           {
             model: UsuarioModel(),
-            as: 'user'
-          }
-        ]
+            as: 'user',
+          },
+        ],
       });
       const options = {
         to: currentUser?.dataValues.email,
@@ -134,42 +134,39 @@ export class Controller {
           layout: {
             defaultBorder: false,
           },
-  
+
           body: await createFacturaSection(insumos),
         },
-    }
-    const pdf: any = {
-      content: [header, dataTable.table.body ? dataTable : undefined ],
-      footer: createFooter
-    };
-    pdfMake.createPdf(pdf).getBuffer(async (data) => {
-      const sendMail = new SendMail('inventario');
+      };
+      const pdf: any = {
+        content: [header, dataTable.table.body ? dataTable : undefined],
+        footer: createFooter,
+      };
+      pdfMake.createPdf(pdf).getBuffer(async data => {
+        const sendMail = new SendMail('inventario');
 
-      await sendMail.send(options, 'Reporte de Insumo', data);
-    });
-    res.json({
-      ok: true,
-      msg: 'PDF creado exitosamente',
-      insumos
-    });
-      
-      
+        await sendMail.send(options, 'Reporte de Insumo', data);
+      });
+      res.json({
+        ok: true,
+        msg: 'PDF creado exitosamente',
+        insumos,
+      });
     } catch (error) {
       return res.status(500).json({
         ok: false,
-        msg: `Hable con el administrador: ${error}`
-      })
+        msg: `Hable con el administrador: ${error}`,
+      });
     }
 
-   
     async function createFacturaSection(signos: any[]) {
       // const project: any = await this.getNameProject(checkData.project);
       const data: any = [];
       const border = [true, true, true, true];
       const borderTitle = ['#01595C', '#01595C', '#FFFFFF', '#01595C'];
       const borderText = ['#01595C', '#01595C', '#01595C', '#01595C'];
-      if(signos.length === 0) return;
-      signos.forEach((e) => {
+      if (signos.length === 0) return;
+      signos.forEach(e => {
         data.push([
           {
             colSpan: 2,
@@ -203,7 +200,7 @@ export class Controller {
             fillColor: '#01595C',
           },
         ]);
-  
+
         data.push([
           {
             text: 'Nombre de Insumo:',
@@ -219,7 +216,7 @@ export class Controller {
             borderColor: borderText,
           },
         ]);
-  
+
         data.push([
           {
             text: 'Cantidad:',
@@ -259,7 +256,10 @@ export class Controller {
             borderColor: borderTitle,
           },
           {
-            text: e.observacion_general.length === 0 ? 'N/A' : e.observacion_general ,
+            text:
+              e.observacion_general.length === 0
+                ? 'N/A'
+                : e.observacion_general,
             color: '#657685',
             border: border,
             borderColor: borderText,
@@ -281,10 +281,10 @@ export class Controller {
         //   },
         // ]);
       });
-  
+
       return data;
     }
-   function createFooter(currentPage: number, pageCount: number) {
+    function createFooter(currentPage: number, pageCount: number) {
       return {
         columns: [
           // { text: '', alignment: 'center' }, // Espacio vacío a la izquierda
@@ -333,6 +333,5 @@ export class Controller {
       ];
       return header;
     }
-  
   };
 }

@@ -46,12 +46,12 @@ export class Controller {
       whereClause['user_id'] = Number(user);
     }
     if (startDate && endDate) {
-      const start = moment(new Date(startDate as any).toISOString().slice(0, -1)).format(
-        'YYYY-MM-DD 00:00:00'
-      );
-      const end = moment(new Date(endDate as any).toISOString().slice(0, -1)).format(
-        'YYYY-MM-DD 23:59:59'
-      );
+      const start = moment(
+        new Date(startDate as any).toISOString().slice(0, -1)
+      ).format('YYYY-MM-DD 00:00:00');
+      const end = moment(
+        new Date(endDate as any).toISOString().slice(0, -1)
+      ).format('YYYY-MM-DD 23:59:59');
       whereClause['createdAt'] = {
         [Op.between]: [start, end],
       };
@@ -128,90 +128,88 @@ export class Controller {
     }
   };
 
-  createPDF = async(req: any, res: Response) => {
-    const {id} = req.user
-    const {startDate,endDate, user, categoria} = req.body;
+  createPDF = async (req: any, res: Response) => {
+    const { id } = req.user;
+    const { startDate, endDate, user, categoria } = req.body;
     const whereClause: any = {};
-      try {
-        if (categoria) {
-          whereClause['categoria_id'] = Number(categoria);
-        }
-        if (user) {
-          whereClause['user_id'] = Number(user);
-        }
-        if (startDate && endDate) {
-          const start = moment(new Date(startDate).toISOString().slice(0, -1)).format(
-            'YYYY-MM-DD 00:00:00'
-          );
-          const end = moment(new Date(endDate).toISOString().slice(0, -1)).format(
-            'YYYY-MM-DD 23:59:59'
-          );
-          whereClause['createdAt'] = {
-            [Op.between]: [start, end],
-          };
-        }
-        const currentUser = await UsuarioModel().findByPk(Number(id));
-        const inventario  = await InventarioModel(['categoria', 'user']).findAll({
-          where: whereClause,
-          include: [
-            {
-              model: CategoriaModel(),
-              as: 'categoria'
-            },
-            {
-              model: UsuarioModel(),
-              as: 'usuario'
-            }
-          ]
-        });
-        const options = {
-          to: currentUser?.dataValues.email,
-          email: currentUser?.dataValues.email,
-          name: currentUser?.dataValues.nombre,
-          filename: 'Reporte.pdf',
-        };
-        const header = {
-          columns: await createPDFHeader('Reporte de Inventario'),
-          columnGap: 10,
-          margin: [0, 0, 0, 30],
-        };
-    
-          const dataTable = {
-            margin: [30, 30, 30, 30],
-            columnGap: 10,
-            table: {
-              headerRows: 1,
-              widths: ['*', '*'],
-              fillColor: '#01595C',
-              layout: {
-                defaultBorder: false,
-              },
-      
-              body: await createFacturaSection(inventario),
-            },
-        }
-        const pdf: any = {
-          content: [header, dataTable.table.body ? dataTable : undefined ],
-          footer: createFooter
-        };
-        pdfMake.createPdf(pdf).getBuffer(async (data) => {
-          const sendMail = new SendMail('inventario');
-    
-          await sendMail.send(options, 'Reporte de Inventario', data);
-        });
-    
-        res.json({
-          ok: true,
-          msg: 'PDF Creado Exitosamente',
-        })
-    
-      } catch (error) {
-        res.status(500).json({
-          ok: false,
-          msg: `Hable con el administrador: ${error}`
-        })
-        
+    try {
+      if (categoria) {
+        whereClause['categoria_id'] = Number(categoria);
       }
+      if (user) {
+        whereClause['user_id'] = Number(user);
+      }
+      if (startDate && endDate) {
+        const start = moment(
+          new Date(startDate).toISOString().slice(0, -1)
+        ).format('YYYY-MM-DD 00:00:00');
+        const end = moment(new Date(endDate).toISOString().slice(0, -1)).format(
+          'YYYY-MM-DD 23:59:59'
+        );
+        whereClause['createdAt'] = {
+          [Op.between]: [start, end],
+        };
+      }
+      const currentUser = await UsuarioModel().findByPk(Number(id));
+      const inventario = await InventarioModel(['categoria', 'user']).findAll({
+        where: whereClause,
+        include: [
+          {
+            model: CategoriaModel(),
+            as: 'categoria',
+          },
+          {
+            model: UsuarioModel(),
+            as: 'usuario',
+          },
+        ],
+      });
+      const options = {
+        to: currentUser?.dataValues.email,
+        email: currentUser?.dataValues.email,
+        name: currentUser?.dataValues.nombre,
+        filename: 'Reporte.pdf',
+      };
+      const header = {
+        columns: await createPDFHeader('Reporte de Inventario'),
+        columnGap: 10,
+        margin: [0, 0, 0, 30],
+      };
+
+      const dataTable = {
+        margin: [30, 30, 30, 30],
+        columnGap: 10,
+        table: {
+          headerRows: 1,
+          widths: ['*', '*'],
+          fillColor: '#01595C',
+          layout: {
+            defaultBorder: false,
+          },
+
+          body: await createFacturaSection(inventario),
+        },
+      };
+      const pdf: any = {
+        content: [header, dataTable.table.body ? dataTable : undefined],
+        footer: createFooter,
+      };
+      pdfMake.createPdf(pdf).getBuffer(async data => {
+        const sendMail = new SendMail('inventario');
+
+        await sendMail.send(options, 'Reporte de Inventario', data);
+      });
+
+      res.json({
+        ok: true,
+        msg: 'PDF Creado Exitosamente',
+      });
+    } catch (error) {
+      res.status(500).json({
+        ok: false,
+        msg: `Hable con el administrador: ${error}`,
+      });
+    }
     async function createPDFHeader(checkName: string) {
       // const result: any = await this.getImageBase64(logo);
       const currentDate = moment().format('DD-MM-YYYY');
@@ -244,15 +242,15 @@ export class Controller {
       ];
       return header;
     }
-  
+
     async function createFacturaSection(signos: any[]) {
       // const project: any = await this.getNameProject(checkData.project);
       const data: any = [];
       const border = [true, true, true, true];
       const borderTitle = ['#01595C', '#01595C', '#FFFFFF', '#01595C'];
       const borderText = ['#01595C', '#01595C', '#01595C', '#01595C'];
-      if(signos.length === 0) return;
-      signos.forEach((e) => {
+      if (signos.length === 0) return;
+      signos.forEach(e => {
         data.push([
           {
             colSpan: 2,
@@ -286,7 +284,7 @@ export class Controller {
             fillColor: '#01595C',
           },
         ]);
-  
+
         data.push([
           {
             text: 'Nombre de Producto:',
@@ -302,7 +300,7 @@ export class Controller {
             borderColor: borderText,
           },
         ]);
-  
+
         data.push([
           {
             text: 'Cantidad:',
@@ -357,7 +355,10 @@ export class Controller {
             borderColor: borderTitle,
           },
           {
-            text: e.observacion_general.length === 0 ? 'N/A' : e.observacion_general ,
+            text:
+              e.observacion_general.length === 0
+                ? 'N/A'
+                : e.observacion_general,
             color: '#657685',
             border: border,
             borderColor: borderText,
@@ -379,10 +380,10 @@ export class Controller {
         //   },
         // ]);
       });
-  
+
       return data;
     }
-   function createFooter(currentPage: number, pageCount: number) {
+    function createFooter(currentPage: number, pageCount: number) {
       return {
         columns: [
           // { text: '', alignment: 'center' }, // Espacio vacío a la izquierda
@@ -399,10 +400,5 @@ export class Controller {
         margin: [0, 0, 0, 0],
       };
     }
-    
-    
-
-    
-  }
-  
+  };
 }
