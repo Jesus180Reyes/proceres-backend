@@ -1,5 +1,5 @@
 import { InventarioModel } from '../../models/inventario_model';
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import { MovimientoModel } from '../../models/movimiento_model';
 import { CategoriaModel } from '../../models/categoria_model';
 import { UsuarioModel } from '../../models/usuario_model';
@@ -133,78 +133,86 @@ export class Controller {
     const {id} = req.user
     const {startDate,endDate, user, categoria} = req.body;
     const whereClause: any = {};
-    if (categoria) {
-      whereClause['categoria_id'] = Number(categoria);
-    }
-    if (user) {
-      whereClause['user_id'] = Number(user);
-    }
-    if (startDate && endDate) {
-      const start = moment(new Date(startDate).toISOString().slice(0, -1)).format(
-        'YYYY-MM-DD 00:00:00'
-      );
-      const end = moment(new Date(endDate).toISOString().slice(0, -1)).format(
-        'YYYY-MM-DD 23:59:59'
-      );
-      whereClause['createdAt'] = {
-        [Op.between]: [start, end],
-      };
-    }
-    const currentUser = await UsuarioModel().findByPk(Number(id));
-    const inventario  = await InventarioModel(['categoria', 'user']).findAll({
-      where: whereClause,
-      include: [
-        {
-          model: CategoriaModel(),
-          as: 'categoria'
-        },
-        {
-          model: UsuarioModel(),
-          as: 'usuario'
+      try {
+        if (categoria) {
+          whereClause['categoria_id'] = Number(categoria);
         }
-      ]
-    });
-    const options = {
-      to: currentUser?.dataValues.email,
-      email: currentUser?.dataValues.email,
-      name: currentUser?.dataValues.nombre,
-      filename: 'Reporte.pdf',
-    };
-    const header = {
-      columns: await createPDFHeader('Reporte de Inventario'),
-      columnGap: 10,
-      margin: [0, 0, 0, 30],
-    };
-
-      const dataTable = {
-        margin: [30, 30, 30, 30],
-        columnGap: 10,
-        table: {
-          headerRows: 1,
-          widths: ['*', '*'],
-          fillColor: '#01595C',
-          layout: {
-            defaultBorder: false,
-          },
-  
-          body: await createFacturaSection(inventario),
-        },
-    }
-    const pdf: any = {
-      content: [header, dataTable.table.body ? dataTable : undefined ],
-      footer: createFooter
-    };
-    pdfMake.createPdf(pdf).getBuffer(async (data) => {
-      const sendMail = new SendMail('inventario');
-
-      await sendMail.send(options, 'Reporte de Inventario', data);
-    });
-
-    res.json({
-      ok: true,
-      msg: 'PDF Creado Exitosamente',
-    })
-
+        if (user) {
+          whereClause['user_id'] = Number(user);
+        }
+        if (startDate && endDate) {
+          const start = moment(new Date(startDate).toISOString().slice(0, -1)).format(
+            'YYYY-MM-DD 00:00:00'
+          );
+          const end = moment(new Date(endDate).toISOString().slice(0, -1)).format(
+            'YYYY-MM-DD 23:59:59'
+          );
+          whereClause['createdAt'] = {
+            [Op.between]: [start, end],
+          };
+        }
+        const currentUser = await UsuarioModel().findByPk(Number(id));
+        const inventario  = await InventarioModel(['categoria', 'user']).findAll({
+          where: whereClause,
+          include: [
+            {
+              model: CategoriaModel(),
+              as: 'categoria'
+            },
+            {
+              model: UsuarioModel(),
+              as: 'usuario'
+            }
+          ]
+        });
+        const options = {
+          to: currentUser?.dataValues.email,
+          email: currentUser?.dataValues.email,
+          name: currentUser?.dataValues.nombre,
+          filename: 'Reporte.pdf',
+        };
+        const header = {
+          columns: await createPDFHeader('Reporte de Inventario'),
+          columnGap: 10,
+          margin: [0, 0, 0, 30],
+        };
+    
+          const dataTable = {
+            margin: [30, 30, 30, 30],
+            columnGap: 10,
+            table: {
+              headerRows: 1,
+              widths: ['*', '*'],
+              fillColor: '#01595C',
+              layout: {
+                defaultBorder: false,
+              },
+      
+              body: await createFacturaSection(inventario),
+            },
+        }
+        const pdf: any = {
+          content: [header, dataTable.table.body ? dataTable : undefined ],
+          footer: createFooter
+        };
+        pdfMake.createPdf(pdf).getBuffer(async (data) => {
+          const sendMail = new SendMail('inventario');
+    
+          await sendMail.send(options, 'Reporte de Inventario', data);
+        });
+    
+        res.json({
+          ok: true,
+          msg: 'PDF Creado Exitosamente',
+        })
+    
+      } catch (error) {
+        res.status(500).json({
+          ok: false,
+          msg: `Hable con el administrador: ${error}`
+        })
+        
+      }
     async function createPDFHeader(checkName: string) {
       // const result: any = await this.getImageBase64(logo);
       const currentDate = moment().format('DD-MM-YYYY');

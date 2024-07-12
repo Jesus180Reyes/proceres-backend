@@ -75,4 +75,10 @@ export class Controller {
       quantityInsumos,
     });
   };
+  createPDF = async (req: Request, res: Response) => {
+    
+    res.json({
+      ok: true,
+    });
+  };
 }
