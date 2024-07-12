@@ -86,9 +86,6 @@ export class Controller {
     const whereClause: any = {};
 
     try {
-      if (categoria) {
-        whereClause['categoria_id'] = Number(categoria);
-      }
       if (user) {
         whereClause['user_id'] = Number(user);
       }
