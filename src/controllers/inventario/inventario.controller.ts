@@ -203,7 +203,6 @@ export class Controller {
     res.json({
       ok: true,
       msg: 'PDF Creado Exitosamente',
-      inventario
     })
 
     async function createPDFHeader(checkName: string) {
