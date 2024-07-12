@@ -356,21 +356,21 @@ export class Controller {
             borderColor: borderText,
           },
         ]);
-        data.push([
-          {
-            text: 'Fecha de creacion:',
-            color: '#657685',
-            bold: true,
-            border: border,
-            borderColor: borderTitle,
-          },
-          {
-            text: moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss'),
-            color: '#657685',
-            border: border,
-            borderColor: borderText,
-          },
-        ]);
+        // data.push([
+        //   {
+        //     text: 'Fecha de creacion:',
+        //     color: '#657685',
+        //     bold: true,
+        //     border: border,
+        //     borderColor: borderTitle,
+        //   },
+        //   {
+        //     text: moment(e.createdAt).format('DD/MM/YYYY'),
+        //     color: '#657685',
+        //     border: border,
+        //     borderColor: borderText,
+        //   },
+        // ]);
       });
   
       return data;
