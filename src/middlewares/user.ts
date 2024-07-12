@@ -17,4 +17,20 @@ export class UserMiddleware {
 
     next();
   };
+  isUserNotExists = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    const user = await UsuarioModel().findOne({
+      where: {
+        email: email,
+      },
+    });
+    if (!user) {
+      return res.status(401).json({
+        ok: false,
+        msg: 'Usuario Ya existe con ese Correo',
+      });
+    }
+
+    next();
+  };
 }

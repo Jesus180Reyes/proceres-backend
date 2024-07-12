@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { UsuarioModel } from '../../models/usuario_model';
 import bycrypt from 'bcrypt';
 import { Token } from '../../utils/token/token';
-import jwt from 'jsonwebtoken';
 import { SendMail } from '../../utils/mail/sendMail';
 export class Controller {
   login = async (req: Request, res: Response) => {
@@ -10,7 +9,7 @@ export class Controller {
     try {
       const user = await UsuarioModel().findOne({
         where: {
-          email: email,
+          email: email.trim(),
         },
       });
       if (!user) {
