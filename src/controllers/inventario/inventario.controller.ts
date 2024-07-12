@@ -365,7 +365,7 @@ export class Controller {
             borderColor: borderTitle,
           },
           {
-            text: moment(e.createdAt).format('DD/MM/YYYY'),
+            text: moment(e.createdAt).format('YYYY-MM-DD HH:mm:ss'),
             color: '#657685',
             border: border,
             borderColor: borderText,
