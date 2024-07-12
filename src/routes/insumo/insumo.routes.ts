@@ -11,6 +11,6 @@ router.get('/', [auth.auth], controller.getInsumos);
 
 router.post('/', insumoValidation, controller.createInsumo);
 router.get('/total/insumo', [auth.auth], controller.totalInsumo);
-router.get('/pdf', [auth.auth], controller.totalInsumo);
+router.post('/pdf', [auth.auth], controller.createPDF);
 
 export default router;

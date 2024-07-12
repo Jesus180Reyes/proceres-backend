@@ -8,7 +8,6 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import moment from 'moment';
 import { SendMail } from '../../utils/mail/sendMail';
-import { Base64 } from 'js-base64';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
   createInventario = async (req: any, res: Response) => {
