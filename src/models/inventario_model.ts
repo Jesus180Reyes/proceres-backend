@@ -62,4 +62,5 @@ export interface IInventario {
   categoria_id: number;
   user_id: number;
   observacion_general?: string;
+  createdAt?: string
 }

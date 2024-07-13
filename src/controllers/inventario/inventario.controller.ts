@@ -3,7 +3,7 @@ import e, { Request, Response } from 'express';
 import { MovimientoModel } from '../../models/movimiento_model';
 import { CategoriaModel } from '../../models/categoria_model';
 import { UsuarioModel } from '../../models/usuario_model';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import moment from 'moment';
@@ -401,4 +401,84 @@ export class Controller {
       };
     }
   };
+
+  getMetricsInventario = async(req: Request, res: Response) => {
+    try {
+    const totalQuantityProducts = await InventarioModel().sum('cantidad');
+    const totalProductsOnCocina = await getTotalProductsByCategory(1);
+    const totalProductsOnCafe = await getTotalProductsByCategory(2);
+    const totalProductsOnRestaurante = await getTotalProductsByCategory(3);
+    const totalProductsOnLimpieza = await getTotalProductsByCategory(4);
+    const totalProductsOnAirbnb = await getTotalProductsByCategory(5);
+    const totalProductsOnInmobiliaria = await getTotalProductsByCategory(6);
+    const totalProductsOnPlateria = await getTotalProductsByCategory(7);
+    const totalProductsOnUtensillos = await getTotalProductsByCategory(8);
+
+
+    res.json({
+      totalProductsOnAirbnb: Math.round((totalProductsOnAirbnb / totalQuantityProducts) * 100),
+      totalProductsOnCocina: Math.round((totalProductsOnCocina / totalQuantityProducts) * 100),
+      totalProductsOnCafe: Math.round((totalProductsOnCafe / totalQuantityProducts) * 100),
+      totalProductsOnLimpieza: Math.round((totalProductsOnLimpieza / totalQuantityProducts) * 100),
+      totalProductsOnRestaurante: Math.round((totalProductsOnRestaurante / totalQuantityProducts) * 100),
+      totalProductsOnInmobiliaria: Math.round((totalProductsOnInmobiliaria / totalQuantityProducts) * 100),
+      totalProductsOnPlateria: Math.round((totalProductsOnPlateria / totalQuantityProducts) * 100),
+      totalProductsOnUtensillos: Math.round((totalProductsOnUtensillos / totalQuantityProducts) * 100),
+
+    })
+    } catch (error) {
+      console.log(error);
+    return res.status(500).json({
+      ok: false,
+      msg: `Hable con el Administrador: ${error}`
+    })      
+    }
+    async function getTotalProductsByCategory(id: number) {
+      const productsOnCategory = await InventarioModel().sum('cantidad', {
+        where: {
+          categoria_id: id,
+        },
+      });
+      return productsOnCategory;
+    }
+  }
+  getMetricsBarInventario = async(req: Request, res: Response) => {
+    const metrics:any = [];
+    // const inventario = await InventarioModel().sequelize?.query(
+    //   `SELECT DISTINCT createdAt from inventario`
+    // ) as any;
+    const months:any = await InventarioModel().findAll({
+      attributes: [
+        [Sequelize.fn('DISTINCT',Sequelize.fn( 'DATE', Sequelize.col('createdAt'))), 'date']
+      ]
+    });
+    for (const item of months) {
+      const startDate = moment(item.dataValues.date).startOf('month').format('YYYY-MM-DD'); // Primer día del mes
+      const endDate = moment(item.dataValues.date).endOf('month').format('YYYY-MM-DD'); 
+      const year = moment(item.date).year();
+      const month = moment(item.date).month() + 1; // `moment` months are 0-indexed
+      const metric = await InventarioModel().count({
+        where: {
+          createdAt: {
+            [Op.gte]: startDate, // Fecha de inicio del mes
+            [Op.lt]: moment(endDate).add(1, 'days').format('YYYY-MM-DD') 
+          }
+            
+              // Fecha de inicio
+          // createdAt: moment(new Date(item.date))
+          
+        
+      }});
+    
+      metrics.push(metric )
+      
+    }
+    res.json({
+      ok: true, 
+      months,
+      metrics
+    })
+
+
+  }
 }

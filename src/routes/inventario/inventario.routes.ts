@@ -13,6 +13,8 @@ router.post(
   controller.createInventario
 );
 router.get('/', [auth.auth], controller.getInventario);
+router.get('/metrics', [auth.auth], controller.getMetricsInventario);
+router.get('/metrics/bar', [auth.auth], controller.getMetricsBarInventario);
 router.get('/:id', [auth.auth], controller.getProductoById);
 router.get('/total/Products', [auth.auth], controller.getTotalProducts);
 router.post('/pdf', [auth.auth], controller.createPDF);
