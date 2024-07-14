@@ -37,26 +37,35 @@ export class Controller {
     }
   };
   getInventario = async (req: Request, res: Response) => {
-    const { categoria, user, startDate, endDate } = req.query;
+    const {filters} = req.body; 
     const whereClause: any = {};
-    if (categoria) {
-      whereClause['categoria_id'] = Number(categoria);
+    if(filters) {
+
+      if (filters.categoria) {
+        whereClause['categoria_id'] = Number(filters.categoria);
+      }
     }
-    if (user) {
-      whereClause['user_id'] = Number(user);
+    if(filters) {
+
+      if (filters.user) {
+        whereClause['user_id'] = Number(filters.user);
+      }
     }
-    if (startDate && endDate) {
-      const start = moment(
-        new Date(startDate as any).toISOString()
-      ).format('YYYY-MM-DD 00:00:00');
-      const end = moment(
-        new Date(endDate as any).toISOString()
-      ).format('YYYY-MM-DD 23:59:59');
-      console.log(start)
-      console.log(end)
-      whereClause['createdAt'] = {
-        [Op.between]: [start, end],
-      };
+    if(filters){
+
+      if (filters.startDate && filters.endDate) {
+        const start = moment(
+          new Date(filters.startDate as any).toISOString().slice(0, -1)
+        ).format('YYYY-MM-DD 00:00:00');
+        const end = moment(
+          new Date(filters.endDate as any).toISOString().slice(0, -1)
+        ).format('YYYY-MM-DD 23:59:59');
+        console.log(start)
+        console.log(end)
+        whereClause['createdAt'] = {
+          [Op.between]: [start, end],
+        };
+      }
     }
 
     const inventario = await InventarioModel(['categoria', 'user']).findAll({

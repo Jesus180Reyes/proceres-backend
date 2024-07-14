@@ -18,10 +18,16 @@ export class Controller {
       whereClause['user_id'] = user;
     }
     if (startDate && endDate) {
-      const start = new Date(startDate.toString());
-      const end = new Date(endDate.toString());
+      const start = moment(
+        new Date(startDate as any).toISOString().slice(0, -1)
+      ).format('YYYY-MM-DD 00:00:00');
+      const end = moment(
+        new Date(endDate as any).toISOString().slice(0, -1)
+      ).format('YYYY-MM-DD 23:59:59');
+      console.log(start)
+      console.log(end)
       whereClause['createdAt'] = {
-        [Op.between]: [start, end.setDate(end.getDate() + 1)],
+        [Op.between]: [start, end],
       };
     }
     const insumos = await InsumoModel(['user']).findAll({

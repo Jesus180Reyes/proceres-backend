@@ -12,7 +12,7 @@ router.post(
   inventarioValidation,
   controller.createInventario
 );
-router.get('/', [auth.auth], controller.getInventario);
+router.post('/getAll', [auth.auth], controller.getInventario);
 router.get('/metrics', [auth.auth], controller.getMetricsInventario);
 router.get('/metrics/bar', [auth.auth], controller.getMetricsBarInventario);
 router.get('/:id', [auth.auth], controller.getProductoById);
