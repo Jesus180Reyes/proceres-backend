@@ -65,11 +65,6 @@ export class Controller {
         };
       }
     }
-
-    console.log('Filters:', filters);
-console.log('Where Clause:', whereClause);
-
-
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
       where: whereClause,
       order: [['createdAt', 'DESC']],
