@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ConnectionDB } from '../db/connection';
 import { CategoriaModel } from './categoria_model';
 import { UsuarioModel } from './usuario_model';
@@ -31,6 +31,11 @@ export const InventarioModel = (include?: includes[]) => {
       },
       observacion_general: {
         type: DataTypes.STRING,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
     },
     {

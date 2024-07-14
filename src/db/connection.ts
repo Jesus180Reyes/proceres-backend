@@ -11,7 +11,8 @@ export class ConnectionDB {
     host: DB_HOST,
     database: DB_NAME,
     dialect: 'mysql',
-    logging: true,
+    logging: false,
     port: Number(DB_PORT!),
+    timezone: '+00:00'
   });
 }

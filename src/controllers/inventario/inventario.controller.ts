@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Op, Sequelize } from 'sequelize';
 import { InventarioModel } from '../../models/inventario_model';
 import e, { Request, Response } from 'express';
@@ -6,7 +7,6 @@ import { CategoriaModel } from '../../models/categoria_model';
 import { UsuarioModel } from '../../models/usuario_model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import moment from 'moment';
 import { SendMail } from '../../utils/mail/sendMail';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
@@ -60,8 +60,8 @@ export class Controller {
         // const end = moment(
         //   new Date(filters.endDate as string).toISOString().slice(0, -1)
         // ).format('YYYY-MM-DD 23:59:59');
-        const start = moment.utc(new Date(filters.startDate)).startOf('day').toISOString();
-        const end = moment.utc(new Date(filters.endDate)).endOf('day').toISOString();
+       const start = moment.utc(filters.startDate).startOf('day').format('YYYY-MM-DD 00:00:00');
+       const end = moment.utc(filters.endDate).endOf('day').format('YYYY-MM-DD 23:59:59');
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
         };
