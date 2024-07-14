@@ -37,7 +37,7 @@ export class Controller {
     }
   };
   getInventario = async (req: Request, res: Response) => {
-    const {filters} = req.body; 
+    let {filters} = req.body; 
     const whereClause: any = {};
     if(filters) {
 
@@ -60,8 +60,8 @@ export class Controller {
         // const end = moment(
         //   new Date(filters.endDate as string).toISOString().slice(0, -1)
         // ).format('YYYY-MM-DD 23:59:59');
-       const start = moment.utc(filters.startDate).startOf('day').format('YYYY-MM-DD 00:00:00');
-       const end = moment.utc(filters.endDate).endOf('day').format('YYYY-MM-DD 23:59:59');
+        const start = moment(filters.startDate).startOf('day').utc().format();
+        const end = moment(filters.endDate).endOf('day').utc().format();
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
         };
