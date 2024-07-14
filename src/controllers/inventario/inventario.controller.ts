@@ -55,18 +55,20 @@ export class Controller {
 
       if (filters.startDate && filters.endDate) {
         const start = moment(
-          new Date(filters.startDate as any).toISOString().slice(0, -1)
+          new Date(filters.startDate as string).toISOString().slice(0, -1)
         ).format('YYYY-MM-DD 00:00:00');
         const end = moment(
-          new Date(filters.endDate as any).toISOString().slice(0, -1)
+          new Date(filters.endDate as string).toISOString().slice(0, -1)
         ).format('YYYY-MM-DD 23:59:59');
-        console.log(start)
-        console.log(end)
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
         };
       }
     }
+
+    console.log('Filters:', filters);
+console.log('Where Clause:', whereClause);
+
 
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
       where: whereClause,
