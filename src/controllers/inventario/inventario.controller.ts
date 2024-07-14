@@ -47,10 +47,10 @@ export class Controller {
     }
     if (startDate && endDate) {
       const start = moment(
-        new Date(startDate as any).toISOString().slice(0, -1)
+        new Date(startDate as any).toISOString()
       ).format('YYYY-MM-DD 00:00:00');
       const end = moment(
-        new Date(endDate as any).toISOString().slice(0, -1)
+        new Date(endDate as any).toISOString()
       ).format('YYYY-MM-DD 23:59:59');
       console.log(start)
       console.log(end)
