@@ -1,9 +1,9 @@
+import { Op, Sequelize } from 'sequelize';
 import { InventarioModel } from '../../models/inventario_model';
 import e, { Request, Response } from 'express';
 import { MovimientoModel } from '../../models/movimiento_model';
 import { CategoriaModel } from '../../models/categoria_model';
 import { UsuarioModel } from '../../models/usuario_model';
-import { Op, Sequelize } from 'sequelize';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import moment from 'moment';
