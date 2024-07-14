@@ -54,12 +54,14 @@ export class Controller {
     if(filters){
 
       if (filters.startDate && filters.endDate) {
-        const start = moment(
-          new Date(filters.startDate as string).toISOString().slice(0, -1)
-        ).format('YYYY-MM-DD 00:00:00');
-        const end = moment(
-          new Date(filters.endDate as string).toISOString().slice(0, -1)
-        ).format('YYYY-MM-DD 23:59:59');
+        // const start = moment(
+        //   new Date(filters.startDate as string).toISOString().slice(0, -1)
+        // ).format('YYYY-MM-DD 00:00:00');
+        // const end = moment(
+        //   new Date(filters.endDate as string).toISOString().slice(0, -1)
+        // ).format('YYYY-MM-DD 23:59:59');
+        const start = moment.utc(new Date(filters.startDate)).startOf('day').toISOString();
+        const end = moment.utc(new Date(filters.endDate)).endOf('day').toISOString();
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
         };
