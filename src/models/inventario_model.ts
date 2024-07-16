@@ -39,7 +39,7 @@ export const InventarioModel = (include?: includes[]) => {
       },
       imgUrl: {
         type: DataTypes.STRING,
-      }
+      },
     },
     {
       tableName: 'inventario',

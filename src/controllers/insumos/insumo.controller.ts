@@ -24,8 +24,6 @@ export class Controller {
       const end = moment(
         new Date(endDate as any).toISOString().slice(0, -1)
       ).format('YYYY-MM-DD 23:59:59');
-      console.log(start)
-      console.log(end)
       whereClause['createdAt'] = {
         [Op.between]: [start, end],
       };
