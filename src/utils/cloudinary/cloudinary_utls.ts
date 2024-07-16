@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { config } from 'dotenv';
 config();
-import { ImageFormat, VideoFormat, v2 as cloudinary } from 'cloudinary';
+import { ImageFormat, UploadApiResponse, VideoFormat, v2 as cloudinary } from 'cloudinary';
 
 export class CloudinaryUtils {
   public allowed_formats: VideoFormat[] | ImageFormat[];
@@ -13,12 +13,15 @@ export class CloudinaryUtils {
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
   }
-  uploadFile = async (file: string, folder: string) => {
+  uploadFile = async (file: string, folder: string): Promise<UploadApiResponse> => {
     try {
       const result = await cloudinary.uploader.upload(file, {
         public_id: crypto.randomUUID(),
         allowed_formats: this.allowed_formats,
         folder: folder,
+        transformation: [
+         {quality: 'auto:eco'}
+        ],
         // notification_url: 'https://discord.com/api/webhooks/1231872153633165345/B-w3kU884-UpOP1xkcz-CQbXqEhm1zBZI98WptXty95s_DtWKgQq18SEEkfqkjAM7jJH/cloudinary',
         // eager_notification_url: 'https://discord.com/api/webhooks/1231872153633165345/B-w3kU884-UpOP1xkcz-CQbXqEhm1zBZI98WptXty95s_DtWKgQq18SEEkfqkjAM7jJH/cloudinary'
       });

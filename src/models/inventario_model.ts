@@ -37,6 +37,9 @@ export const InventarioModel = (include?: includes[]) => {
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
+      imgUrl: {
+        type: DataTypes.STRING,
+      }
     },
     {
       tableName: 'inventario',
@@ -67,5 +70,6 @@ export interface IInventario {
   categoria_id: number;
   user_id: number;
   observacion_general?: string;
-  createdAt?: Date
+  createdAt?: Date;
+  imgUrl?: string;
 }

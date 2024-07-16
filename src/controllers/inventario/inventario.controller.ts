@@ -9,14 +9,33 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { SendMail } from '../../utils/mail/sendMail';
 import { Filter } from '../../services/filters/filter';
+import { CloudinaryUtils } from '../../utils/cloudinary/cloudinary_utls';
+import { FilesUtil } from '../../utils/files/files_util';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
   createInventario = async (req: any, res: Response) => {
     const { body } = req;
+    const files = req.files;
+    let whereClause :any = {};
+    try {
+      if(files && files.length > 0) {
+        const upload = new CloudinaryUtils(['jpg', 'png']);
+        const result = await upload.uploadFile(files[0].path , 'proceres');
+      whereClause['imgUrl'] = result.secure_url;
+        FilesUtil.deleteFolderContents(`./uploads/`);
+      }
+    } catch (error) {
+      return res.status(500).json({
+        ok: false,
+        msg: `Hable con el administrador: ${error}`
+      })
+      
+    }
     try {
       const inventario = await InventarioModel().create({
         ...body,
         user_id: req.user.id,
+        imgUrl: whereClause.imgUrl ? whereClause.imgUrl : null  ,
       });
       await MovimientoModel().create({
         title: 'Nuevo Producto Ingresado',
@@ -37,8 +56,9 @@ export class Controller {
       });
     }
   };
-  getInventario = async (req: Request, res: Response) => {
-    let {filters} = req.body; 
+  getInventario = async (req: any, res: Response) => {
+   
+    const {filters} = req.body; 
     const whereClause: any = {};
     if(filters) {
 

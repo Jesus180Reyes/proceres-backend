@@ -69,6 +69,7 @@ export class Server {
     this.app.use(compression());
     this.app.use(express.urlencoded({ extended: true }));
     const storage = multer.diskStorage({ destination: './uploads/' });
+    // const storage = multer.memoryStorage();
     const upload = multer({
       storage: storage,
       dest: './uploads/',

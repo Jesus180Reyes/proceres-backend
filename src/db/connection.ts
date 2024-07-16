@@ -13,6 +13,5 @@ export class ConnectionDB {
     dialect: 'mysql',
     logging: false,
     port: Number(DB_PORT!),
-    timezone: '+00:00'
   });
 }
