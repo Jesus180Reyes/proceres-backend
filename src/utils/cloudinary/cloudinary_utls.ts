@@ -27,7 +27,7 @@ export class CloudinaryUtils {
         public_id: crypto.randomUUID(),
         allowed_formats: this.allowed_formats,
         folder: folder,
-        transformation: [{ quality: 'auto:eco' }],
+        transformation: [{ quality: 60 }],
         // notification_url: 'https://discord.com/api/webhooks/1231872153633165345/B-w3kU884-UpOP1xkcz-CQbXqEhm1zBZI98WptXty95s_DtWKgQq18SEEkfqkjAM7jJH/cloudinary',
         // eager_notification_url: 'https://discord.com/api/webhooks/1231872153633165345/B-w3kU884-UpOP1xkcz-CQbXqEhm1zBZI98WptXty95s_DtWKgQq18SEEkfqkjAM7jJH/cloudinary'
       });

@@ -102,10 +102,20 @@ export class Controller {
   };
   getProductoById = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const inventario = await InventarioModel().findOne({
+    const inventario = await InventarioModel(['categoria', 'user']).findOne({
       where: {
         id: id,
       },
+      include: [
+        {
+          model:  CategoriaModel(),
+          as: 'categoria'
+        },
+        {
+          model:  UsuarioModel(),
+          as: 'usuario'
+        }
+      ]
     });
     res.json({
       ok: true,
