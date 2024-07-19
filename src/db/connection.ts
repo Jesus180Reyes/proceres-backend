@@ -14,13 +14,13 @@ export class ConnectionDB {
     logging: false,
     port: Number(DB_PORT!),
     dialectOptions: {
-      connectTimeout: 60000,
+      connectTimeout: 90000,
     },
     pool: {
       max: 5,
       min: 0,
-      acquire: 60000,
-      idle: 10000,
+      acquire: 90000,
+      idle: 90000,
     },
   });
 }
