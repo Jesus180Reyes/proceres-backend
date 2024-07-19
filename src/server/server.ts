@@ -32,7 +32,6 @@ export class Server {
     this.app = express();
     this.port = process.env.PORT || '8080';
 
-    // Conectar a base de datos
     this.initialize();
 
     // Middlewares
@@ -44,6 +43,7 @@ export class Server {
     this.mountCronOperations();
   }
   private async initialize() {
+     // Conectar a base de datos
     await this.conectarDB();
   }
 
