@@ -70,9 +70,11 @@ export class Controller {
     }
     if (filters) {
       if (filters.startDate && filters.endDate) {
+        const filterStartDate = new Date(filters.startDate);
+        const filterEndDate = new Date(filters.endDate);
         const { start, end } = await Filter.getWhereDates(
-          filters.startDate,
-          filters.endDate
+          filterStartDate.toISOString(),
+          filterEndDate.toISOString(),
         );
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
