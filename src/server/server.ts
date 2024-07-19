@@ -33,7 +33,7 @@ export class Server {
     this.port = process.env.PORT || '8080';
 
     // Conectar a base de datos
-    this.conectarDB();
+    this.initialize();
 
     // Middlewares
     this.middlewares();
@@ -42,6 +42,9 @@ export class Server {
     this.routes();
     // Montar Cron
     this.mountCronOperations();
+  }
+  private async initialize() {
+    await this.conectarDB();
   }
 
   async conectarDB() {
