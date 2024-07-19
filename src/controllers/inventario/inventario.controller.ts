@@ -79,7 +79,6 @@ export class Controller {
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
         };
-        console.log({start, end});
       }
     }
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
