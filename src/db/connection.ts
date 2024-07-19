@@ -13,5 +13,14 @@ export class ConnectionDB {
     dialect: 'mysql',
     logging: false,
     port: Number(DB_PORT!),
+    dialectOptions: {
+      connectTimeout: 60000,
+    },
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 60000,
+      idle: 10000,
+    },
   });
 }
