@@ -11,6 +11,7 @@ import { SendMail } from '../../utils/mail/sendMail';
 import { Filter } from '../../services/filters/filter';
 import { CloudinaryUtils } from '../../utils/cloudinary/cloudinary_utls';
 import { FilesUtil } from '../../utils/files/files_util';
+import { Pagination } from '../../utils/pagination/pagination';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
   createInventario = async (req: any, res: Response) => {
@@ -81,7 +82,10 @@ export class Controller {
         };
       }
     }
+    const {limit,offset, page} = new Pagination().paginate(req)
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
+      limit,
+      offset,
       where: whereClause,
       order: [['createdAt', 'DESC']],
       include: [
@@ -97,9 +101,21 @@ export class Controller {
         },
       ],
     });
+    
+
+    const totalCount = await InventarioModel().count();
+    const totalPages = Math.ceil(totalCount / limit);
+    const isInventarioHasMore = await InventarioModel().findOne({
+      offset: offset + limit
+    });
+    const hasMore = !!isInventarioHasMore;
     res.json({
       ok: true,
+      page,
+      limit,
+      hasMore,
       inventario,
+      totalPages,
     });
   };
   getProductoById = async (req: Request, res: Response) => {
