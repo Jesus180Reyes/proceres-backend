@@ -75,14 +75,14 @@ export class Controller {
         const filterEndDate = new Date(filters.endDate).toUTCString();
         const { start, end } = await Filter.getWhereDates(
           filterStartDate,
-          filterEndDate,
+          filterEndDate
         );
         whereClause['createdAt'] = {
           [Op.between]: [start, end],
         };
       }
     }
-    const {limit,offset, page} = new Pagination().paginate(req)
+    const { limit, offset, page } = new Pagination().paginate(req);
     const inventario = await InventarioModel(['categoria', 'user']).findAll({
       limit,
       offset,
@@ -101,12 +101,11 @@ export class Controller {
         },
       ],
     });
-    
 
     const totalCount = await InventarioModel().count();
     const totalPages = Math.ceil(totalCount / limit);
     const isInventarioHasMore = await InventarioModel().findOne({
-      offset: offset + limit
+      offset: offset + limit,
     });
     const hasMore = !!isInventarioHasMore;
     res.json({
@@ -126,14 +125,14 @@ export class Controller {
       },
       include: [
         {
-          model:  CategoriaModel(),
-          as: 'categoria'
+          model: CategoriaModel(),
+          as: 'categoria',
         },
         {
-          model:  UsuarioModel(),
-          as: 'usuario'
-        }
-      ]
+          model: UsuarioModel(),
+          as: 'usuario',
+        },
+      ],
     });
     res.json({
       ok: true,

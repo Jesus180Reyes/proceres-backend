@@ -43,7 +43,7 @@ export class Server {
     this.mountCronOperations();
   }
   private async initialize() {
-     // Conectar a base de datos
+    // Conectar a base de datos
     await this.conectarDB();
   }
 
