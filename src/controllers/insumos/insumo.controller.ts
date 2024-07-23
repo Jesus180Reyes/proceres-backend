@@ -7,6 +7,7 @@ import moment from 'moment';
 import { SendMail } from '../../utils/mail/sendMail';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Pagination } from '../../utils/pagination/pagination';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export class Controller {
@@ -28,7 +29,10 @@ export class Controller {
         [Op.between]: [start, end],
       };
     }
+    const {limit, offset, page} = new Pagination().paginate(req);
     const insumos = await InsumoModel(['user']).findAll({
+      limit,
+      offset,
       where: whereClause,
       order: [['createdAt', 'DESC']],
       include: [
@@ -41,9 +45,21 @@ export class Controller {
         },
       ],
     });
+    const totalCount = await InsumoModel().count();
+    const totalPages = Math.ceil(totalCount / limit);
+    const isInventarioHasMore = await InsumoModel().findOne({
+      offset: offset + limit,
+    });
+    const hasMore = !!isInventarioHasMore;
     res.json({
       ok: true,
+      limit,
+      offset,
+      page,
+      totalCount,
+      hasMore,
       insumos,
+      totalPages
     });
   };
 

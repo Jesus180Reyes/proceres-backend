@@ -113,6 +113,7 @@ export class Controller {
       page,
       limit,
       hasMore,
+      totalCount,
       inventario,
       totalPages,
     });
