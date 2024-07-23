@@ -29,7 +29,7 @@ export class Controller {
         [Op.between]: [start, end],
       };
     }
-    const {limit, offset, page} = new Pagination().paginate(req);
+    const { limit, offset, page } = new Pagination().paginate(req);
     const insumos = await InsumoModel(['user']).findAll({
       limit,
       offset,
@@ -59,7 +59,7 @@ export class Controller {
       totalCount,
       hasMore,
       insumos,
-      totalPages
+      totalPages,
     });
   };
 
